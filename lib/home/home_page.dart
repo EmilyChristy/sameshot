@@ -15,23 +15,32 @@ class _HomePageState extends State<HomePage> {
       appBar: CustomAppBar(
         title: 'Sameshot',
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 32.0,
+      body: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1, // 10%
+            child: Container(color: Colors.green[30]),
           ),
-          Text(
-            'Some text here',
-            style: Theme.of(context).textTheme.headline6,
+          Expanded(
+            flex: 8, // 80%
+            child: Container(
+              color: Colors.green[40],
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 150,
+                  ),
+                  Text("Hello"),
+                  SizedBox(height: 200),
+                  RaisedButton(child: const Text("OK Go"), onPressed: () => {})
+                ],
+              ),
+            ),
           ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          RaisedButton(
-            child: const Text('CLick me'),
-            onPressed: () => {},
-          ),
+          Expanded(
+            flex: 1, // 10%
+            child: Container(color: Colors.green[30]),
+          )
         ],
       ),
     );

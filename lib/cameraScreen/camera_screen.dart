@@ -11,6 +11,6 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Monkeys eat bananas");
+    return Text("camera here");
   }
 }
