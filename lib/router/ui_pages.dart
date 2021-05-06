@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import '../app_state.dart';
 
 const String SplashPath = '/splash';
 const String HomePath = '/home';
@@ -26,13 +27,20 @@ class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
+  PageAction currentPageAction;
 
-  const PageConfiguration(
-      {@required this.key, @required this.path, @required this.uiPage});
+  PageConfiguration(
+      {@required this.key,
+      @required this.path,
+      @required this.uiPage,
+      this.currentPageAction});
 }
 
-const PageConfiguration SplashPageConfig =
-    PageConfiguration(key: 'Splash', path: SplashPath, uiPage: Pages.Splash);
+PageConfiguration SplashPageConfig = PageConfiguration(
+    key: 'Splash',
+    path: SplashPath,
+    uiPage: Pages.Splash,
+    currentPageAction: null);
 // const PageConfiguration LoginPageConfig =
 //     PageConfiguration(key: 'Login', path: LoginPath, uiPage: Pages.Login);
 // const PageConfiguration CreateAccountPageConfig = PageConfiguration(
@@ -45,7 +53,10 @@ const PageConfiguration SplashPageConfig =
 //     PageConfiguration(key: 'Cart', path: CartPath, uiPage: Pages.Cart);
 // const PageConfiguration CheckoutPageConfig = PageConfiguration(
 //     key: 'Checkout', path: CheckoutPath, uiPage: Pages.Checkout);
-const PageConfiguration HomePageConfig =
-    PageConfiguration(key: 'Home', path: HomePath, uiPage: Pages.Home);
-const PageConfiguration SettingsPageConfig = PageConfiguration(
-    key: 'Settings', path: SettingsPath, uiPage: Pages.Settings);
+PageConfiguration HomePageConfig = PageConfiguration(
+    key: 'Home', path: HomePath, uiPage: Pages.Home, currentPageAction: null);
+PageConfiguration SettingsPageConfig = PageConfiguration(
+    key: 'Settings',
+    path: SettingsPath,
+    uiPage: Pages.Settings,
+    currentPageAction: null);

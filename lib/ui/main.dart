@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'app_state.dart';
+import '../app_state.dart';
 import '../ui/splash.dart';
 import 'package:sameshot/theme/config.dart';
 import 'package:sameshot/theme/custom_theme.dart';
+import 'package:sameshot/router/router_delegate.dart';
+import 'package:sameshot/router/shopping_parser.dart';
+import 'package:sameshot/router/ui_pages.dart';
 
 class CameraApp extends StatefulWidget {
   @override
@@ -16,9 +19,14 @@ class CameraApp extends StatefulWidget {
 
 class _CameraAppState extends State<CameraApp> {
   final appState = AppState();
+  ShoppingRouterDelegate delegate;
+  final parser = ShoppingParser();
 
-  _MyAppState() {
-    // TODO Setup Router & dispatcher
+  // TODO Add Subscription
+
+  _CameraAppState() {
+    delegate = ShoppingRouterDelegate(appState);
+    delegate.setNewRoutePath(SplashPageConfig);
   }
 
   @override
@@ -46,12 +54,14 @@ class _CameraAppState extends State<CameraApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppState>(
       create: (_) => appState,
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Sameshot',
         theme: CustomTheme.lightTheme, //3
         darkTheme: CustomTheme.darkTheme, //4
         themeMode: currentTheme.currentTheme,
-        home: Splash(),
+        routerDelegate: delegate,
+        routeInformationParser: parser,
+        //home: Splash(),
       ),
     );
   }

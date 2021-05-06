@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 50),
                   new Container(
                       child: new Image.asset(
-                    'images/sameshot-logo.png',
+                    'images/sameshotlogo.png',
                     height: 60.0,
                     fit: BoxFit.cover,
                   )),

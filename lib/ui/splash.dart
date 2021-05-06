@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../ui/app_state.dart';
+import '../app_state.dart';
 
 const String LoggedInKey = 'LoggedIn';
 
