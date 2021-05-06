@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class CustomTheme with ChangeNotifier {
-  static bool _isDarkTheme = true;
+  static bool _isDarkTheme = false;
   ThemeMode get currentTheme => _isDarkTheme ? ThemeMode.dark : ThemeMode.light;
 
   void toggleTheme() {
@@ -12,18 +12,15 @@ class CustomTheme with ChangeNotifier {
   }
 
   static ThemeData get lightTheme {
-    //1
     return ThemeData(
-        //2
-        primaryColor: CustomColors.purple,
+        primaryColor: Colors.indigo[800],
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Montserrat', //3
         buttonTheme: ButtonThemeData(
-          // 4
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          buttonColor: CustomColors.lightPurple,
-        ));
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            buttonColor: Colors.orange[700],
+            textTheme: ButtonTextTheme.primary));
   }
 
   static ThemeData get darkTheme {
@@ -33,9 +30,9 @@ class CustomTheme with ChangeNotifier {
         fontFamily: 'Montserrat',
         textTheme: ThemeData.dark().textTheme,
         buttonTheme: ButtonThemeData(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          buttonColor: CustomColors.lightPurple,
-        ));
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            buttonColor: Colors.orange[700],
+            textTheme: ButtonTextTheme.primary));
   }
 }

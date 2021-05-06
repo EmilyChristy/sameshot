@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sameshot/settings_screen.dart';
+import 'package:sameshot/ui/settings_screen.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;

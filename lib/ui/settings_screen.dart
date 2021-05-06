@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sameshot/custom_app_bar.dart';
+import 'package:sameshot/ui/custom_app_bar.dart';
+import 'package:sameshot/theme/config.dart';
+import 'package:sameshot/theme/custom_theme.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key key}) : super(key: key);
@@ -10,23 +12,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isSwitched = false;
-  var textValue = 'Light theme is active';
-
-  void toggleSwitch(bool value) {
-    if (isSwitched == false) {
-      setState(() {
-        isSwitched = true;
-        textValue = 'Dark theme is active';
-      });
-      //print('Switch Button is ON');
-    } else {
-      setState(() {
-        isSwitched = false;
-        textValue = 'Light theme is active';
-      });
-      //print('Switch Button is OFF');
-    }
-  }
+  var textValue = "Theme: " + currentTheme.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +38,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text("Settings"),
                   SizedBox(height: 50),
                   Switch(
-                    onChanged: toggleSwitch,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                        currentTheme.toggleTheme();
+                        print(isSwitched);
+                      });
+                    },
                     value: isSwitched,
                     activeColor: Colors.indigo[900],
                     activeTrackColor: Colors.lightBlue[100],
@@ -60,8 +52,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     inactiveTrackColor: Colors.lightBlue.shade100,
                   ),
                   Text(textValue),
-                  SizedBox(height: 200),
-                  RaisedButton(child: const Text("OK Go"), onPressed: () => {})
+                  //SizedBox(height: 200),
+                  //RaisedButton(child: const Text("OK Go"), onPressed: () => {})
                 ],
               ),
             ),
