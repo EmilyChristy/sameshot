@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sameshot/theme/config.dart';
+import 'package:sameshot/theme/custom_theme.dart';
+import 'package:sameshot/ui/cameraScreen/camera_screen.dart';
+// import 'package:sameshot/ui/settings_screen.dart';
 import 'package:sameshot/ui/custom_app_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Sameshot',
+        title: 'Home',
       ),
       body: Row(
         children: <Widget>[
@@ -26,24 +30,50 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   SizedBox(height: 50),
+                  // new Container(
+                  //     child: new Image.asset(
+                  //   'images/sameshotlogo.png',
+                  //   height: 60.0,
+                  //   fit: BoxFit.cover,
+                  // )),
+                  // SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 2, 2),
+                        child: Text(
+                          "Previous Sameshot images",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                      ),
+                    ],
+                  ),
                   new Container(
-                      child: new Image.asset(
-                    'images/sameshotlogo.png',
-                    height: 60.0,
-                    fit: BoxFit.cover,
-                  )),
-                  SizedBox(height: 200),
-                  RaisedButton(
-                      child: Text("Click Me"),
-                      onPressed: () {
-                        this._alertIsVisible = true;
-                        _showAlert(context);
-                      })
+                    color: Colors.amber[100],
+                    width: 350,
+                    height: 300,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("You have no previous images"),
+                    ),
+                  )
                 ],
               ),
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return CameraScreen();
+            }),
+          )
+        },
+        child: const Icon(Icons.add_a_photo),
       ),
     );
   }

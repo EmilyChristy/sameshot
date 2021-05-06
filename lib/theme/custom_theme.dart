@@ -16,6 +16,10 @@ class CustomTheme with ChangeNotifier {
         primaryColor: Colors.indigo[800],
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Montserrat', //3
+        textTheme: TextTheme(
+            headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
+            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind')),
         buttonTheme: ButtonThemeData(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)),
@@ -28,7 +32,11 @@ class CustomTheme with ChangeNotifier {
         primaryColor: CustomColors.darkGrey,
         scaffoldBackgroundColor: Colors.black,
         fontFamily: 'Montserrat',
-        textTheme: ThemeData.dark().textTheme,
+        textTheme: TextTheme(
+            headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
+            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind')),
+        //textTheme: ThemeData.dark().textTheme,
         buttonTheme: ButtonThemeData(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)),
