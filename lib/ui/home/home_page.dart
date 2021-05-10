@@ -14,13 +14,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _alertIsVisible = false;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Home',
-      ),
+      // appBar: CustomAppBar(
+      //   title: 'Home',
+      // ),
       body: Row(
         children: <Widget>[
           Expanded(
@@ -74,6 +81,28 @@ class _HomePageState extends State<HomePage> {
           )
         },
         child: const Icon(Icons.add_a_photo),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
+            backgroundColor: Colors.amber,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_album),
+            label: 'Photos',
+            backgroundColor: Colors.green,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+            backgroundColor: Colors.pink,
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
     );
   }

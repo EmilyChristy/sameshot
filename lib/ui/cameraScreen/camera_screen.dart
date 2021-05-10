@@ -1,56 +1,57 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
-import 'package:sameshot/theme/custom_theme.dart';
-import 'package:sameshot/ui/custom_app_bar.dart';
+import 'package:path/path.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({Key key}) : super(key: key);
+  final String imagePath;
+
+  CameraScreen({this.imagePath});
+
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  //final Widget title;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Take new photo',
+      appBar: AppBar(
+        title: Text('Preview'),
+        backgroundColor: Colors.blueGrey,
       ),
-      body: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 9, // 90%
-            child: Container(
-              color: Colors.grey[400],
-              child: Column(
-                children: [
-                  SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 2, 2),
-                        child: Text(
-                          "{Camera screen here}",
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+                flex: 2,
+                child: Image.file(File(widget.imagePath), fit: BoxFit.cover)),
+            SizedBox(height: 10.0),
+            Flexible(
+              flex: 1,
+              child: Container(
+                padding: EdgeInsets.all(60.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    getBytesFromFile().then((bytes) {
+                      Share.file('Share via:', basename(widget.imagePath),
+                          bytes.buffer.asUint8List(), 'image/png');
+                    });
+                  },
+                  child: Text('Share'),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        child: const Icon(Icons.photo_camera_sharp),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<ByteData> getBytesFromFile() async {
+    Uint8List bytes = File(widget.imagePath).readAsBytesSync() as Uint8List;
+    return ByteData.view(bytes.buffer);
   }
 }

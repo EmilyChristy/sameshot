@@ -43,21 +43,6 @@ class AppState extends ChangeNotifier {
     _currentAction = PageAction();
   }
 
-  // void addToCart(String item) {
-  //   cartItems.add(item);
-  //   notifyListeners();
-  // }
-
-  // void removeFromCart(String item) {
-  //   cartItems.add(item);
-  //   notifyListeners();
-  // }
-
-  // void clearCart() {
-  //   cartItems.clear();
-  //   notifyListeners();
-  // }
-
   void setSplashFinished() {
     _splashFinished = true;
     if (_loggedIn) {
