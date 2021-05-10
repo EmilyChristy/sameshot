@@ -62,7 +62,7 @@ class _CameraAppState extends State<CameraApp> {
         themeMode: currentTheme.currentTheme,
         routerDelegate: delegate,
         routeInformationParser: parser,
-        camera:
+        //camera:
         //home: Splash(),
       ),
     );

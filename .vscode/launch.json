@@ -11,7 +11,7 @@
             // The entry script to execute when running the app.
 		// Set to a "web" in a Dart web app to run in web move.
 		// Set to "test" in an app with tests to run all tests.
-		"program": "main.dart",
+		"program": "lib/main.dart",
         }
     ]
     
