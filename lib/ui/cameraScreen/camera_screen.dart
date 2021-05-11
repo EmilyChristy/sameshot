@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import '../previewScreen/preview_screen.dart';
+import '../previewscreen/preview_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -21,6 +21,7 @@ class _CameraScreenState extends State {
   void initState() {
     super.initState();
     availableCameras().then((availableCameras) {
+
       cameras = availableCameras;
 
       if (cameras.length > 0) {
@@ -29,7 +30,7 @@ class _CameraScreenState extends State {
         });
 
         _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
-      } else {
+      }else{
         print("No camera available");
       }
     }).catchError((err) {
@@ -113,9 +114,9 @@ class _CameraScreenState extends State {
     }
 
     return AspectRatio(
-      aspectRatio: controller.value.aspectRatio,
-      child: CameraPreview(controller),
-    );
+        aspectRatio: controller.value.aspectRatio,
+        child: CameraPreview(controller),
+      );
   }
 
   /// Display the control bar with buttons to take pictures
@@ -175,7 +176,7 @@ class _CameraScreenState extends State {
 
   void _onSwitchCamera() {
     selectedCameraIdx =
-        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+    selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
     CameraDescription selectedCamera = cameras[selectedCameraIdx];
     _initCameraController(selectedCamera);
   }
@@ -192,7 +193,7 @@ class _CameraScreenState extends State {
         '${DateTime.now()}.png',
       );
       print(path);
-      await controller.takePicture(); //path
+      await controller.takePicture(path);
 
       // If the picture was taken, display it on a new screen
       Navigator.push(
