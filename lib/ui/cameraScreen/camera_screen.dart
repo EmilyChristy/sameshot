@@ -69,8 +69,23 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
       Permission.camera,
     ].request();
     _cameras = await availableCameras();
-    var controller = await selectCamera();
-    setState(() => _controller = controller);
+
+    //check for available cameras
+    if (_cameras.length > 0) {
+      var controller = await selectCamera();
+      setState(() => _controller = controller);
+
+      // setState(() {
+      //   selectedCameraIdx = 0;
+      // });
+
+      //_initCameraController(cameras[selectedCameraIdx]).then((void v) {});
+    } else {
+      print("No camera available");
+    }
+
+    // var controller = await selectCamera();
+    // setState(() => _controller = controller);
   }
 
   selectCamera() async {
@@ -79,35 +94,6 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
     await controller.initialize();
     return controller;
   }
-
-  // Future _initCameraController(CameraDescription cameraDescription) async {
-  //   if (_controller != null) {
-  //     await _controller.dispose();
-  //   }
-
-  //   _controller = CameraController(cameraDescription, ResolutionPreset.high);
-
-  //   // If the controller is updated then update the UI.
-  //   _controller.addListener(() {
-  //     if (mounted) {
-  //       setState(() {});
-  //     }
-
-  //     if (_controller.value.hasError) {
-  //       print('Camera error ${_controller.value.errorDescription}');
-  //     }
-  //   });
-
-  //   try {
-  //     await _controller.initialize();
-  //   } on CameraException catch (e) {
-  //     _showCameraException(e);
-  //   }
-
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +153,13 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
       child: Align(
         alignment: Alignment.center,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
             FloatingActionButton(
-                child: Icon(Icons.camera),
-                backgroundColor: Colors.blueGrey,
+                child: Icon(_getCameraLensIcon(
+                    CameraLensDirection.front)), //Icon(Icons.camera),
+                backgroundColor: Colors.lightBlue,
                 onPressed: () {
                   _onCapturePressed(context);
                 })
