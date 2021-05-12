@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:sameshot/theme/config.dart';
 import 'package:sameshot/theme/custom_theme.dart';
 import 'package:sameshot/ui/cameraScreen/camera_screen.dart';
@@ -15,16 +16,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _alertIsVisible = false;
+  //bool _alertIsVisible = false;
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) async {
     setState(() {
       _selectedIndex = index;
     });
     print("TApped ${_selectedIndex.toString()}");
 
     if (_selectedIndex == 1) {
+      //ask for permission to access photos
+      final permitted = await PhotoManager.requestPermission();
+      if (!permitted) return;
+
       //go to gallery page
       Navigator.push(
         context,

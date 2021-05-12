@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class Gallery extends StatefulWidget {
   @override
@@ -10,67 +11,47 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-  static const platform = const MethodChannel('samples.flutter.dev/battery');
+  List<AssetEntity> assets = [];
   List images;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Gallery'),
-        centerTitle: true,
-      ),
-      // body: Container(
-      //     child: SafeArea(
-      //         child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.stretch,
-      //   children: [Text("show photos here")],
-      // ))),
-      body: images != null
-          ? new GridView.count(
-              padding: const EdgeInsets.all(8.0),
-              crossAxisCount: 4,
-              children: List.generate(100, (index) {
-                return Center(
-                  child: Text(
-                    'Item $index',
-                    style: Theme.of(context).textTheme.headline5,
-                  ));
-              
-              },
-              // staggeredTileBuilder: (i) =>
-              //     new StaggeredTile.count(2, i.isEven ? 2 : 3),
-              // mainAxisSpacing: 8.0,
-              // crossAxisSpacing: 8.0,
-            )
-          : new Center(
-              child: new CircularProgressIndicator(),
-            ),
-    );
+        appBar: AppBar(
+          title: Text('Gallery'),
+          centerTitle: true,
+        ),
+        body: Container(
+            child: SafeArea(
+                child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("show photos here"),
+            Text('There are ${assets.length} assets')
+          ],
+        ))));
   }
 
   @override
   void initState() {
     super.initState();
 
-    _getImages();
+    _fetchAssets();
   }
 
-  Future<void> _getImages() async {
-    print('inside get images>>>>>>>>>>>>');
-    List imgs;
-    try {
-      final List result = await platform.invokeMethod('getImages');
-      imgs = result;
-      for (String i in result) {
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$i');
-      }
-    } on PlatformException catch (e) {
-      print("Error");
-    }
+  _fetchAssets() async {
+    // Set onlyAll to true, to fetch only the 'Recent' album
+    // which contains all the photos/videos in the storage
+    final albums = await PhotoManager.getAssetPathList(onlyAll: true);
+    final recentAlbum = albums.first;
 
-    setState(() {
-      images = imgs;
-    });
+    // Now that we got the album, fetch all the assets it contains
+    final recentAssets = await recentAlbum.getAssetListRange(
+      start: 0, // start at index 0
+      end: 1000000, // end at a very big index (to get all the assets)
+    );
+
+    // Update the state and notify UI
+    setState(() => assets = recentAssets);
   }
 }
