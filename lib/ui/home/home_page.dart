@@ -4,6 +4,8 @@ import 'package:sameshot/theme/custom_theme.dart';
 import 'package:sameshot/ui/cameraScreen/camera_screen.dart';
 // import 'package:sameshot/ui/settings_screen.dart';
 import 'package:sameshot/ui/custom_app_bar.dart';
+import 'package:sameshot/ui/gallery/gallery.dart';
+import 'package:sameshot/ui/settings_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -20,6 +22,27 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+    print("TApped ${_selectedIndex.toString()}");
+
+    if (_selectedIndex == 1) {
+      //go to gallery page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Gallery(),
+        ),
+      );
+    }
+
+    if (_selectedIndex == 2) {
+      //go to settings page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SettingsPage(),
+        ),
+      );
+    }
   }
 
   @override

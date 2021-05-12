@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../previewscreen/preview_screen.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -21,7 +22,6 @@ class _CameraScreenState extends State {
   void initState() {
     super.initState();
     availableCameras().then((availableCameras) {
-
       cameras = availableCameras;
 
       if (cameras.length > 0) {
@@ -30,13 +30,28 @@ class _CameraScreenState extends State {
         });
 
         _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
-      }else{
+      } else {
         print("No camera available");
       }
     }).catchError((err) {
       print('Error: $err.code\nError Message: $err.message');
     });
   }
+
+  // Future<void> setupCamera() async {
+  //   await [
+  //     Permission.camera,
+  //   ].request();
+  //   _cameras = await availableCameras();
+  //   var controller = await selectCamera();
+  //   setState(() => _controller = controller);
+  // }
+
+  // selectCamera() async {
+  //   var controller = CameraController(_cameras[_selected], ResolutionPreset.low);
+  //   await controller.initialize();
+  //   return controller;
+  // }
 
   Future _initCameraController(CameraDescription cameraDescription) async {
     if (controller != null) {
@@ -114,9 +129,9 @@ class _CameraScreenState extends State {
     }
 
     return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: CameraPreview(controller),
-      );
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
   }
 
   /// Display the control bar with buttons to take pictures
@@ -176,7 +191,7 @@ class _CameraScreenState extends State {
 
   void _onSwitchCamera() {
     selectedCameraIdx =
-    selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
     CameraDescription selectedCamera = cameras[selectedCameraIdx];
     _initCameraController(selectedCamera);
   }
@@ -192,6 +207,18 @@ class _CameraScreenState extends State {
         (await getTemporaryDirectory()).path,
         '${DateTime.now()}.png',
       );
+
+      // final DateFormat formatter = DateFormat('yyyyMMddHHmmss');
+      // String fileName = 'image_${formatter.format(DateTime.now())}';
+
+      // final Directory directory = await getApplicationDocumentsDirectory();
+      // _imagesFolder = Directory(join('${directory.path}', 'gallery'));
+      // if (!_imagesFolder.existsSync()) {
+      //   _imagesFolder.createSync();
+      // }
+
+      // final String path = '${_imagesFolder.path}/$fileName.png';
+
       print(path);
       await controller.takePicture(path);
 
