@@ -12,75 +12,98 @@ class CameraScreen extends StatefulWidget {
   }
 }
 
-class _CameraScreenState extends State {
-  CameraController controller;
-  List cameras;
-  int selectedCameraIdx;
-  String imagePath;
+class _CameraScreenState extends State with WidgetsBindingObserver {
+  List<CameraDescription> _cameras;
+  CameraController _controller;
+  int _selected = 0;
 
   @override
   void initState() {
     super.initState();
-    availableCameras().then((availableCameras) {
-      cameras = availableCameras;
+    setupCamera();
+    WidgetsBinding.instance.addObserver(this);
 
-      if (cameras.length > 0) {
-        setState(() {
-          selectedCameraIdx = 0;
-        });
+    // availableCameras().then((availableCameras) {
+    //   cameras = availableCameras;
 
-        _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
-      } else {
-        print("No camera available");
-      }
-    }).catchError((err) {
-      print('Error: $err.code\nError Message: $err.message');
-    });
+    //   if (cameras.length > 0) {
+    //     setState(() {
+    //       selectedCameraIdx = 0;
+    //     });
+
+    //     _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
+    //   } else {
+    //     print("No camera available");
+    //   }
+    // }).catchError((err) {
+    //   print('Error: $err.code\nError Message: $err.message');
+    // });
   }
 
-  // Future<void> setupCamera() async {
-  //   await [
-  //     Permission.camera,
-  //   ].request();
-  //   _cameras = await availableCameras();
-  //   var controller = await selectCamera();
-  //   setState(() => _controller = controller);
-  // }
-
-  // selectCamera() async {
-  //   var controller = CameraController(_cameras[_selected], ResolutionPreset.low);
-  //   await controller.initialize();
-  //   return controller;
-  // }
-
-  Future _initCameraController(CameraDescription cameraDescription) async {
-    if (controller != null) {
-      await controller.dispose();
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
     }
 
-    controller = CameraController(cameraDescription, ResolutionPreset.high);
-
-    // If the controller is updated then update the UI.
-    controller.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-
-      if (controller.value.hasError) {
-        print('Camera error ${controller.value.errorDescription}');
-      }
-    });
-
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-    }
-
-    if (mounted) {
-      setState(() {});
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      setupCamera();
     }
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  Future<void> setupCamera() async {
+    await [
+      Permission.camera,
+    ].request();
+    _cameras = await availableCameras();
+    var controller = await selectCamera();
+    setState(() => _controller = controller);
+  }
+
+  selectCamera() async {
+    var controller =
+        CameraController(_cameras[_selected], ResolutionPreset.low);
+    await controller.initialize();
+    return controller;
+  }
+
+  // Future _initCameraController(CameraDescription cameraDescription) async {
+  //   if (_controller != null) {
+  //     await _controller.dispose();
+  //   }
+
+  //   _controller = CameraController(cameraDescription, ResolutionPreset.high);
+
+  //   // If the controller is updated then update the UI.
+  //   _controller.addListener(() {
+  //     if (mounted) {
+  //       setState(() {});
+  //     }
+
+  //     if (_controller.value.hasError) {
+  //       print('Camera error ${_controller.value.errorDescription}');
+  //     }
+  //   });
+
+  //   try {
+  //     await _controller.initialize();
+  //   } on CameraException catch (e) {
+  //     _showCameraException(e);
+  //   }
+
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +125,7 @@ class _CameraScreenState extends State {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _cameraTogglesRowWidget(),
+                  // _cameraTogglesRowWidget(),
                   _captureControlRowWidget(context),
                   Spacer()
                 ],
@@ -117,7 +140,7 @@ class _CameraScreenState extends State {
 
   /// Display Camera preview.
   Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
+    if (_controller == null || !_controller.value.isInitialized) {
       return const Text(
         'Loading',
         style: TextStyle(
@@ -129,8 +152,8 @@ class _CameraScreenState extends State {
     }
 
     return AspectRatio(
-      aspectRatio: controller.value.aspectRatio,
-      child: CameraPreview(controller),
+      aspectRatio: _controller.value.aspectRatio,
+      child: CameraPreview(_controller),
     );
   }
 
@@ -156,25 +179,25 @@ class _CameraScreenState extends State {
   }
 
   /// Display a row of toggle to select the camera (or a message if no camera is available).
-  Widget _cameraTogglesRowWidget() {
-    if (cameras == null || cameras.isEmpty) {
-      return Spacer();
-    }
+  // Widget _cameraTogglesRowWidget() {
+  //   if (_cameras == null || _cameras.isEmpty) {
+  //     return Spacer();
+  //   }
 
-    CameraDescription selectedCamera = cameras[selectedCameraIdx];
-    CameraLensDirection lensDirection = selectedCamera.lensDirection;
+  //   CameraDescription selectedCamera = _cameras[selectedCameraIdx];
+  //   CameraLensDirection lensDirection = selectedCamera.lensDirection;
 
-    return Expanded(
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: FlatButton.icon(
-            onPressed: _onSwitchCamera,
-            icon: Icon(_getCameraLensIcon(lensDirection)),
-            label: Text(
-                "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
-      ),
-    );
-  }
+  //   return Expanded(
+  //     child: Align(
+  //       alignment: Alignment.centerLeft,
+  //       child: FlatButton.icon(
+  //           onPressed: _onSwitchCamera,
+  //           icon: Icon(_getCameraLensIcon(lensDirection)),
+  //           label: Text(
+  //               "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
+  //     ),
+  //   );
+  // }
 
   IconData _getCameraLensIcon(CameraLensDirection direction) {
     switch (direction) {
@@ -189,12 +212,12 @@ class _CameraScreenState extends State {
     }
   }
 
-  void _onSwitchCamera() {
-    selectedCameraIdx =
-        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
-    CameraDescription selectedCamera = cameras[selectedCameraIdx];
-    _initCameraController(selectedCamera);
-  }
+  // void _onSwitchCamera() {
+  //   selectedCameraIdx =
+  //       selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+  //   CameraDescription selectedCamera = cameras[selectedCameraIdx];
+  //   _initCameraController(selectedCamera);
+  // }
 
   void _onCapturePressed(context) async {
     // Take the Picture in a try / catch block. If anything goes wrong,
@@ -220,7 +243,7 @@ class _CameraScreenState extends State {
       // final String path = '${_imagesFolder.path}/$fileName.png';
 
       print(path);
-      await controller.takePicture(path);
+      await _controller.takePicture(path);
 
       // If the picture was taken, display it on a new screen
       Navigator.push(
