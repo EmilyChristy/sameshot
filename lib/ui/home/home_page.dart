@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+
 import 'package:sameshot/theme/config.dart';
 import 'package:sameshot/theme/custom_theme.dart';
 import 'package:sameshot/ui/cameraScreen/camera_screen.dart';
@@ -135,22 +136,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showAlert(BuildContext context) {
-    Widget okButton = FlatButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-          this._alertIsVisible = false;
-        },
-        child: Text("Awesome"));
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("My Alert"),
-            content: Text("My first popup"),
-            actions: <Widget>[okButton],
-            elevation: 5,
-          );
-        });
-  }
+  // void _showAlert(BuildContext context) {
+  //   Widget okButton = FlatButton(
+  //       onPressed: () {
+  //         Navigator.of(context).pop();
+  //         //this._alertIsVisible = false;
+  //       },
+  //       child: Text("Awesome"));
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text("My Alert"),
+  //           content: Text("My first popup"),
+  //           actions: <Widget>[okButton],
+  //           elevation: 5,
+  //         );
+  //       });
+  // }
 }
