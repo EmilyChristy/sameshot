@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../previewscreen/preview_screen.dart';
+import 'package:intl/intl.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -16,6 +19,7 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
   List<CameraDescription> _cameras;
   CameraController _controller;
   int _selected = 0;
+  Directory _imagesFolder;
 
   @override
   void initState() {
@@ -224,23 +228,23 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
     // catch the error.
     try {
       // Attempt to take a picture and log where it's been saved
-      final path = join(
-        // In this example, store the picture in the temp directory. Find
-        // the temp directory using the `path_provider` plugin.
-        (await getTemporaryDirectory()).path,
-        '${DateTime.now()}.png',
-      );
+      // final path = join(
+      //   // In this example, store the picture in the temp directory. Find
+      //   // the temp directory using the `path_provider` plugin.
+      //   (await getTemporaryDirectory()).path,
+      //   '${DateTime.now()}.png',
+      // );
 
-      // final DateFormat formatter = DateFormat('yyyyMMddHHmmss');
-      // String fileName = 'image_${formatter.format(DateTime.now())}';
+      final DateFormat formatter = DateFormat('yyyyMMddHHmmss');
+      String fileName = 'image_${formatter.format(DateTime.now())}';
 
-      // final Directory directory = await getApplicationDocumentsDirectory();
-      // _imagesFolder = Directory(join('${directory.path}', 'gallery'));
-      // if (!_imagesFolder.existsSync()) {
-      //   _imagesFolder.createSync();
-      // }
+      final Directory directory = await getApplicationDocumentsDirectory();
+      _imagesFolder = Directory(join('${directory.path}', 'gallery'));
+      if (!_imagesFolder.existsSync()) {
+        _imagesFolder.createSync();
+      }
 
-      // final String path = '${_imagesFolder.path}/$fileName.png';
+      final String path = '${_imagesFolder.path}/$fileName.png';
 
       print(path);
       await _controller.takePicture(path);
