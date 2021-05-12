@@ -1,4 +1,6 @@
 //import 'package:camera/camera.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -23,13 +25,17 @@ class _GalleryState extends State<Gallery> {
         ),
         body: Container(
             child: SafeArea(
-                child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text("show photos here"),
-            Text('There are ${assets.length} assets')
-          ],
-        ))));
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              // A grid view with 3 items per row
+              crossAxisCount: 3,
+            ),
+            itemCount: assets.length,
+            itemBuilder: (_, index) {
+              return AssetThumbnail(asset: assets[index]);
+            },
+          ),
+        )));
   }
 
   @override
@@ -53,5 +59,29 @@ class _GalleryState extends State<Gallery> {
 
     // Update the state and notify UI
     setState(() => assets = recentAssets);
+  }
+}
+
+class AssetThumbnail extends StatelessWidget {
+  const AssetThumbnail({
+    Key key,
+    @required this.asset,
+  }) : super(key: key);
+
+  final AssetEntity asset;
+
+  @override
+  Widget build(BuildContext context) {
+    // We're using a FutureBuilder since thumbData is a future
+    return FutureBuilder<Uint8List>(
+      future: asset.thumbData,
+      builder: (_, snapshot) {
+        final bytes = snapshot.data;
+        // If we have no data, display a spinner
+        if (bytes == null) return CircularProgressIndicator();
+        // If there's data, display it as an image
+        return Image.memory(bytes, fit: BoxFit.cover);
+      },
+    );
   }
 }
