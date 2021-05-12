@@ -26,22 +26,6 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
-
-    // availableCameras().then((availableCameras) {
-    //   cameras = availableCameras;
-
-    //   if (cameras.length > 0) {
-    //     setState(() {
-    //       selectedCameraIdx = 0;
-    //     });
-
-    //     _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
-    //   } else {
-    //     print("No camera available");
-    //   }
-    // }).catchError((err) {
-    //   print('Error: $err.code\nError Message: $err.message');
-    // });
   }
 
   @override
