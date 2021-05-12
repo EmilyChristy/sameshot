@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
+//import 'package:photo_manager/photo_manager.dart';
 
 import 'package:sameshot/theme/config.dart';
 import 'package:sameshot/theme/custom_theme.dart';
@@ -28,8 +28,8 @@ class _HomePageState extends State<HomePage> {
 
     if (_selectedIndex == 1) {
       //ask for permission to access photos
-      final permitted = await PhotoManager.requestPermission();
-      if (!permitted) return;
+      //final permitted = await PhotoManager.requestPermission();
+      //if (!permitted) return;
 
       //go to gallery page
       Navigator.push(

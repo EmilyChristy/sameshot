@@ -8,6 +8,9 @@ import 'package:permission_handler/permission_handler.dart';
 import '../previewscreen/preview_screen.dart';
 import 'package:intl/intl.dart';
 
+//import 'package:photo_manager/photo_manager.dart';
+import 'package:image_picker/image_picker.dart';
+
 class CameraScreen extends StatefulWidget {
   @override
   _CameraScreenState createState() {
@@ -20,6 +23,10 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
   CameraController _controller;
   int _selected = 0;
   Directory _imagesFolder;
+
+   List images;
+  File _image;
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -109,7 +116,25 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
           ),
         ),
       ),
+              floatingActionButton: FloatingActionButton(
+          onPressed: getImage,
+          tooltip: 'Pick Image',
+          child: Icon(Icons.add_a_photo),
+        ));
+
     );
+  }
+
+Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   /// Display Camera preview.
@@ -152,27 +177,6 @@ class _CameraScreenState extends State with WidgetsBindingObserver {
       ),
     );
   }
-
-  /// Display a row of toggle to select the camera (or a message if no camera is available).
-  // Widget _cameraTogglesRowWidget() {
-  //   if (_cameras == null || _cameras.isEmpty) {
-  //     return Spacer();
-  //   }
-
-  //   CameraDescription selectedCamera = _cameras[selectedCameraIdx];
-  //   CameraLensDirection lensDirection = selectedCamera.lensDirection;
-
-  //   return Expanded(
-  //     child: Align(
-  //       alignment: Alignment.centerLeft,
-  //       child: FlatButton.icon(
-  //           onPressed: _onSwitchCamera,
-  //           icon: Icon(_getCameraLensIcon(lensDirection)),
-  //           label: Text(
-  //               "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
-  //     ),
-  //   );
-  // }
 
   IconData _getCameraLensIcon(CameraLensDirection direction) {
     switch (direction) {
