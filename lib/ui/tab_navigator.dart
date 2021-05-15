@@ -5,6 +5,7 @@ import '../color_detail_page.dart';
 import '../colors_list_page.dart';
 import 'tab_item.dart';
 import 'settings_page.dart';
+import 'camera_page.dart';
 
 class TabNavigatorRoutes {
   static const String root = '/';
@@ -62,13 +63,29 @@ class TabNavigator extends StatelessWidget {
             );
           }
 
-          return MaterialPageRoute(
-            builder: (context) => SettingsPage(
-              color: activeTabColor[tabItem],
-              title: tabName[tabItem],
-              materialIndex: 0,
-            ),
-          );
+          //not stacked pages here
+          switch (tabName[tabItem]) {
+            case "camera":
+              return MaterialPageRoute(
+                builder: (context) => CameraPage(
+                  color: activeTabColor[tabItem],
+                  title: tabName[tabItem],
+                  materialIndex: 0,
+                ),
+              );
+              break;
+            case "settings":
+              return MaterialPageRoute(
+                builder: (context) => SettingsPage(
+                  color: activeTabColor[tabItem],
+                  title: tabName[tabItem],
+                  materialIndex: 0,
+                ),
+              );
+              break;
+
+            default:
+          }
         });
   }
 }

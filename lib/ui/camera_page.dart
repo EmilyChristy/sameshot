@@ -5,36 +5,71 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../previewscreen/preview_screen.dart';
+import 'previewscreen/preview_screen.dart';
 import 'package:intl/intl.dart';
 
 //import 'package:photo_manager/photo_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
-// class CameraScreen extends StatefulWidget {
-//   @override
-//   _CameraScreenState createState() {
-//     return _CameraScreenState();
-//   }
-// }
-
-class CameraScreen extends StatelessWidget {
-  CameraScreen({this.color, this.title, this.materialIndex: 500});
+class CameraPage extends StatefulWidget {
+  CameraPage({this.color, this.title, this.materialIndex: 500});
   final MaterialColor color;
   final String title;
   final int materialIndex;
+  double opacityLevel = 0.2;
+  String overlayUrl =
+      'https://images.dog.ceo/breeds/havanese/00100trPORTRAIT_00100_BURST20191103202017556_COVER.jpg';
+
+  @override
+  CameraPageState createState() {
+    return CameraPageState();
+  }
+}
+
+class CameraPageState extends State<CameraPage> {
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    print("Click to get image...");
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: color,
-        title: Text(
-          '$title[$materialIndex]',
+      body: Container(
+        color: widget.color[widget.materialIndex],
+        child: Center(
+          child:
+              _image == null ? Text('Camera feed here.') : Image.file(_image),
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xff7c94b6),
+          image: new DecorationImage(
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(widget.opacityLevel),
+                BlendMode.dstATop),
+            image: new NetworkImage(
+              widget.overlayUrl,
+            ),
+          ),
         ),
       ),
-      body: Container(
-        color: color[materialIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: getImage,
+        tooltip: 'Pick Image',
+        child: const Icon(Icons.photo_outlined),
+        backgroundColor: Colors.lightBlue,
       ),
     );
   }
