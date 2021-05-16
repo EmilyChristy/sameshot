@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'previewscreen/preview_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -16,7 +17,7 @@ class CameraPage extends StatefulWidget {
   final MaterialColor color;
   final String title;
   final int materialIndex;
-  double opacityLevel = 0.2;
+
   String overlayUrl =
       'https://images.dog.ceo/breeds/havanese/00100trPORTRAIT_00100_BURST20191103202017556_COVER.jpg';
 
@@ -28,11 +29,25 @@ class CameraPage extends StatefulWidget {
 
 class CameraPageState extends State<CameraPage> {
   File _image;
-  final picker = ImagePicker();
+  final _picker = ImagePicker();
+  double _opacity = 0;
+  final double _opacityDefault = 0.5;
+
+//Loading counter value on start
+  void _loadPrefs() async {
+    final _prefs = await SharedPreferences.getInstance();
+    //set opacity to the saved value, or use the default if no user
+    //preference has been saved
+    setState(() {
+      _opacity = (_prefs.getDouble('opacity') ?? _opacityDefault);
+    });
+
+    print("Got opacity level : $_opacity");
+  }
 
   Future getImage() async {
     print("Click to get image...");
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
@@ -44,7 +59,16 @@ class CameraPageState extends State<CameraPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print("Camera INITSTATE");
+    //_loadPrefs();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("Camera BUILD");
+    _loadPrefs();
     return Scaffold(
       body: Container(
         color: widget.color[widget.materialIndex],
@@ -57,8 +81,7 @@ class CameraPageState extends State<CameraPage> {
           image: new DecorationImage(
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(widget.opacityLevel),
-                BlendMode.dstATop),
+                Colors.black.withOpacity(_opacity), BlendMode.dstATop),
             image: new NetworkImage(
               widget.overlayUrl,
             ),

@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
       _opacity = (prefs.getDouble('opacity') ?? _opacityDefault);
     });
 
-    //assign value to the ipacity field controller
+    //assign value to the opacity field controller
     opacityValueHolder.text = _opacity.toString();
   }
 
