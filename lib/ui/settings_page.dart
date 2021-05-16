@@ -12,37 +12,51 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  int _opacity = 0;
-  TextEditingController _controller;
+  double _opacity = 0;
+  final double _opacityDefault = 0.5;
+  final opacityValueHolder = TextEditingController();
 
-  void onPressed() {
+  void onPressedSavePrefs() {
     _savePrefs();
-  }
-
-  @override
-  void initState() {
-    _controller = new TextEditingController(text: '3');
-
-    super.initState();
-    _loadPrefs();
   }
 
   //Loading counter value on start
   void _loadPrefs() async {
     final prefs = await SharedPreferences.getInstance();
+    //set opacity to the saved value, or use the default if no user
+    //preference has been saved
     setState(() {
-      _opacity = (prefs.getInt('opacity') ?? 0);
+      _opacity = (prefs.getDouble('opacity') ?? _opacityDefault);
     });
-    print("Opacity is $_opacity");
+
+    //assign value to the ipacity field controller
+    opacityValueHolder.text = _opacity.toString();
   }
 
   //Incrementing counter after click
   void _savePrefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _opacity = 5;
-      prefs.setInt('opacity', _opacity);
+      _opacity = double.parse(opacityValueHolder.text);
+
+      //save value in user prefs
+      prefs.setDouble('opacity', _opacity);
     });
+  }
+
+  @override
+  void initState() {
+    //_controller = new TextEditingController(text: _opacity.toString());
+
+    super.initState();
+    _loadPrefs();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    opacityValueHolder.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           backgroundColor: widget.color,
           title: Text(
-            '${widget.title}[${widget.materialIndex}]',
+            '${widget.title}',
           ),
         ),
         body: Container(
@@ -62,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    controller: _controller,
+                    controller: opacityValueHolder,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter opacity value',
@@ -81,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FlatButton(
-                      onPressed: onPressed,
+                      onPressed: onPressedSavePrefs,
                       color: Colors.blueAccent,
                       child: Text("Save")),
                 )
