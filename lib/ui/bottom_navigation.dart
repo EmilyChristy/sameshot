@@ -21,7 +21,7 @@ class BottomNavigation extends StatelessWidget {
 
   //bottom menu button onpress
   void tabbtnPressed(int index) {
-    print("Bottom nav pressed ${index}:${currentTab} ------");
+    //print("Bottom nav pressed ${index}:${currentTab} ------");
     return onSelectTab(
       TabItem.values[index],
     );

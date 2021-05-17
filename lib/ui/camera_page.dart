@@ -62,13 +62,27 @@ class CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
     print("Camera INITSTATE");
-    //_loadPrefs();
+    _loadPrefs();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    //print("did change dependencies");
+  }
+
+  @override
+  void didUpdateWidget(covariant CameraPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _loadPrefs();
+    // id changed in the widget, I need to make a new API call
+    //if(oldWidget != widget.id) update();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Camera BUILD");
-    _loadPrefs();
+    //_loadPrefs();
     return Scaffold(
       body: Container(
         color: widget.color[widget.materialIndex],
