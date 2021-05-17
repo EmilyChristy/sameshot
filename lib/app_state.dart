@@ -22,14 +22,10 @@ class AppState extends State<App> {
 
   void _selectTab(TabItem tabItem) {
     if (tabItem == _currentTab) {
-      // print("Pop to first route");
-      // print("Set state ${_currentTab} : ${tabItem}");
-
       // pop to first route
       _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
     } else {
       setState(() => _currentTab = tabItem);
-      // print("Set state ${_currentTab} : ${tabItem}");
     }
   }
 

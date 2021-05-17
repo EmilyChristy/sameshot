@@ -22,7 +22,7 @@ class TabNavigator extends StatelessWidget {
   void _push(BuildContext context, {int materialIndex: 500}) {
     var routeBuilders = _routeBuilders(context, materialIndex: materialIndex);
 
-    print("SUB TAB PUSHED >>>> ${tabItem.toString()}");
+    //print("SUB TAB PUSHED >>>> ${tabItem.toString()}");
     Navigator.push(
       context,
       MaterialPageRoute(

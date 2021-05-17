@@ -47,9 +47,7 @@ class _CameraAppState extends State<CameraApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sameshot',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: CustomTheme.lightTheme,
       home: App(),
     );
     // return ChangeNotifierProvider<AppState>(
