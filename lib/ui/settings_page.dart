@@ -68,17 +68,31 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //backgroundColor: widget.color,
-          title: Text(
-            '${widget.title}',
-          ),
-        ),
+        // appBar: AppBar(
+        //   //backgroundColor: widget.color,
+        //   title: Text(
+        //     '${widget.title}',
+        //   ),
+        // ),
         body: Container(
             color: CustomColors.lightBackground,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Image.asset(
+                        'images/sameshotlogo.png',
+                        height: 40.0,
+                        fit: BoxFit.cover,
+                      )),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text("Overlay transparency"),
@@ -150,12 +164,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(textValue),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FlatButton(
-                      onPressed: onPressedSavePrefs,
-                      color: Colors.blueAccent,
-                      child: Text("Save")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 100),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FlatButton(
+                          onPressed: onPressedSavePrefs,
+                          color: Colors.blueAccent,
+                          child: Text("Save")),
+                    ),
+                  ],
                 )
               ],
             )));

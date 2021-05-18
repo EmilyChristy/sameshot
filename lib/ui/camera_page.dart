@@ -28,10 +28,17 @@ class CameraPage extends StatefulWidget {
 }
 
 class CameraPageState extends State<CameraPage> {
-  File _image;
+  Image _pickedImage;
   final _picker = ImagePicker();
+  final TextEditingController maxWidthController = TextEditingController();
+  final TextEditingController maxHeightController = TextEditingController();
+  final TextEditingController qualityController = TextEditingController();
+  String _retrieveDataError;
   double _opacity = 0;
   final double _opacityDefault = 0.5;
+  bool isVideo = false;
+  PickedFile _imageFile;
+  dynamic _pickImageError;
 
 //Loading counter value on start
   void _loadPrefs() async {
@@ -42,18 +49,44 @@ class CameraPageState extends State<CameraPage> {
       _opacity = (_prefs.getDouble('opacity') ?? _opacityDefault);
     });
 
-    print("Got opacity level : $_opacity");
+    //print("Got opacity level : $_opacity");
   }
 
   Future getImage() async {
     print("Click to get image...");
     final pickedFile = await _picker.getImage(source: ImageSource.camera);
+    bool kIsWeb = true;
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
+    if (kIsWeb) {
+      //for web platform
+      setState(() {
+        _pickedImage = Image.network(pickedFile.path);
+      });
+    } else {
+      //for device platforms
+      setState(() {
+        _pickedImage = Image.file(File(pickedFile.path));
+      });
+    }
+  }
+
+  void _onImageButtonPressed(ImageSource source, {BuildContext context}) async {
+    await _displayPickImageDialog(context,
+        (double maxWidth, double maxHeight, int quality) async {
+      try {
+        final pickedFile = await _picker.getImage(
+          source: source,
+          maxWidth: maxWidth,
+          maxHeight: maxHeight,
+          imageQuality: quality,
+        );
+        setState(() {
+          _imageFile = pickedFile;
+        });
+      } catch (e) {
+        setState(() {
+          _pickImageError = e;
+        });
       }
     });
   }
@@ -82,35 +115,137 @@ class CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Widget build....");
     //_loadPrefs();
     return Scaffold(
       body: Container(
         color: widget.color[widget.materialIndex],
-        child: Center(
-          child:
-              _image == null ? Text('Camera feed here.') : Image.file(_image),
-        ),
+        child: Center(child: Text('No image selected.')),
         decoration: BoxDecoration(
           color: const Color(0xff7c94b6),
           image: new DecorationImage(
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(_opacity), BlendMode.dstATop),
-            image: new NetworkImage(
-              widget.overlayUrl,
-            ),
+            repeat: ImageRepeat.repeatY,
+            image: getOverlayImage(),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: const Icon(Icons.photo_outlined),
-        backgroundColor: Colors.lightBlue,
+      //
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Semantics(
+            label: 'image_picker_example_from_gallery',
+            child: FloatingActionButton(
+              onPressed: () {
+                isVideo = false;
+                _onImageButtonPressed(ImageSource.gallery, context: context);
+              },
+              heroTag: 'image0',
+              tooltip: 'Pick Image from gallery',
+              child: const Icon(Icons.photo_library),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                isVideo = false;
+                _onImageButtonPressed(ImageSource.camera, context: context);
+              },
+              heroTag: 'image1',
+              tooltip: 'Take a Photo',
+              child: const Icon(Icons.camera_alt),
+            ),
+          ),
+        ],
       ),
     );
   }
+
+  ImageProvider getOverlayImage() {
+    if (_pickedImage == null) {
+      //load local asset
+      return new AssetImage(
+        'images/funnydog1.jpg',
+      );
+      // } else {
+      //   //return picked image
+      //   return _pickedImage;
+      // }
+    }
+  }
+
+  Text _getRetrieveErrorWidget() {
+    if (_retrieveDataError != null) {
+      final Text result = Text(_retrieveDataError);
+      _retrieveDataError = null;
+      return result;
+    }
+    return null;
+  }
+
+  Future<void> _displayPickImageDialog(
+      BuildContext context, OnPickImageCallback onPick) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Add optional parameters'),
+            content: Column(
+              children: <Widget>[
+                TextField(
+                  controller: maxWidthController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxWidth if desired"),
+                ),
+                TextField(
+                  controller: maxHeightController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxHeight if desired"),
+                ),
+                TextField(
+                  controller: qualityController,
+                  keyboardType: TextInputType.number,
+                  decoration:
+                      InputDecoration(hintText: "Enter quality if desired"),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                  child: const Text('PICK'),
+                  onPressed: () {
+                    double width = maxWidthController.text.isNotEmpty
+                        ? double.parse(maxWidthController.text)
+                        : null;
+                    double height = maxHeightController.text.isNotEmpty
+                        ? double.parse(maxHeightController.text)
+                        : null;
+                    int quality = qualityController.text.isNotEmpty
+                        ? int.parse(qualityController.text)
+                        : null;
+                    onPick(width, height, quality);
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        });
+  }
 }
+
+typedef void OnPickImageCallback(
+    double maxWidth, double maxHeight, int quality);
 
 // class _CameraScreenState extends State with WidgetsBindingObserver {
 //   List<CameraDescription> _cameras;

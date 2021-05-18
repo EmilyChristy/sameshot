@@ -31,7 +31,7 @@ class AppState extends State<App> {
 
   void setSplashFinished() {
     _splashFinished = true;
-
+    print("SPLASH FINISHED - - - - -- -");
     // _currentAction =
     //     PageAction(state: PageState.replaceAll, page: HomePageConfig);
 
