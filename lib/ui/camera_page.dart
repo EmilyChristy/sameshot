@@ -27,7 +27,7 @@ class CameraPage extends StatefulWidget {
   }
 }
 
-class CameraPageState extends State<CameraPage> {
+class CameraPageState extends State with WidgetsBindingObserver {
   Image _pickedImage;
   final _picker = ImagePicker();
   final TextEditingController maxWidthController = TextEditingController();
@@ -101,6 +101,7 @@ class CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
     print("Camera INITSTATE");
+    setupCamera();
     _loadPrefs();
   }
 
@@ -108,6 +109,26 @@ class CameraPageState extends State<CameraPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     //print("did change dependencies");
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      setupCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -148,28 +169,28 @@ class CameraPageState extends State<CameraPage> {
     //_loadPrefs();
     return Scaffold(
       body: Container(
-        color: widget.color[widget.materialIndex],
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: _cameraPreviewWidget(),
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // _cameraTogglesRowWidget(),
-                  _captureControlRowWidget(context),
-                  Spacer()
-                ],
-              ),
-              SizedBox(height: 20.0)
-            ],
-          ),
+        // color: Colors.blue,
+        //child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: _cameraPreviewWidget(),
+            ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // _cameraTogglesRowWidget(),
+                _captureControlRowWidget(context),
+                Spacer()
+              ],
+            ),
+            SizedBox(height: 20.0)
+          ],
         ),
+        //),
         decoration: BoxDecoration(
           color: const Color(0xff7c94b6),
           image: new DecorationImage(
@@ -223,6 +244,16 @@ class CameraPageState extends State<CameraPage> {
               tooltip: 'Take a Photo',
               child: const Icon(Icons.camera_alt),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+                child: Icon(_getCameraLensIcon(
+                    CameraLensDirection.front)), //Icon(Icons.camera),
+                backgroundColor: Colors.lightBlue,
+                onPressed: () {
+                  _onCapturePressed(context);
+                }),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 14.0, 0.0, 8.0),
@@ -446,16 +477,16 @@ class CameraPageState extends State<CameraPage> {
 
       final String path = '${_imagesFolder.path}/$fileName.png';
 
-      print(path);
+      print(">>>>>PATH - $path");
       await _controller.takePicture(path);
 
       // If the picture was taken, display it on a new screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PreviewImageScreen(imagePath: path),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => PreviewImageScreen(imagePath: path),
+      //   ),
+      // );
     } catch (e) {
       // If an error occurs, log the error to the console.
       print(e);
