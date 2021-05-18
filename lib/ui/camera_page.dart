@@ -119,6 +119,29 @@ class CameraPageState extends State<CameraPage> {
     //if(oldWidget != widget.id) update();
   }
 
+//body: Container(
+//         child: SafeArea(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.stretch,
+//             children: <Widget>[
+//               Expanded(
+//                 flex: 1,
+//                 child: _cameraPreviewWidget(),
+//               ),
+//               SizedBox(height: 10.0),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   // _cameraTogglesRowWidget(),
+//                   _captureControlRowWidget(context),
+//                   Spacer()
+//                 ],
+//               ),
+//               SizedBox(height: 20.0)
+//             ],
+//           ),
+//         ),
+
   @override
   Widget build(BuildContext context) {
     print("Widget build....");
@@ -126,7 +149,27 @@ class CameraPageState extends State<CameraPage> {
     return Scaffold(
       body: Container(
         color: widget.color[widget.materialIndex],
-        child: Center(child: Text('No image selected.')),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: _cameraPreviewWidget(),
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // _cameraTogglesRowWidget(),
+                  _captureControlRowWidget(context),
+                  Spacer()
+                ],
+              ),
+              SizedBox(height: 20.0)
+            ],
+          ),
+        ),
         decoration: BoxDecoration(
           color: const Color(0xff7c94b6),
           image: new DecorationImage(
