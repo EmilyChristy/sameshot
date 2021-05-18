@@ -136,6 +136,21 @@ class CameraPageState extends State<CameraPage> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14.0, 0.0, 8.0),
+            child: Container(
+                child: _imageFile != null
+                    ? Image.asset(
+                        _imageFile.path,
+                        height: 20.0,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'images/sameshotlogo.png',
+                        height: 20.0,
+                        fit: BoxFit.cover,
+                      )),
+          ),
           Semantics(
             label: 'image_picker_example_from_gallery',
             child: FloatingActionButton(
@@ -159,6 +174,15 @@ class CameraPageState extends State<CameraPage> {
               tooltip: 'Take a Photo',
               child: const Icon(Icons.camera_alt),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14.0, 0.0, 8.0),
+            child: Container(
+                child: Image.asset(
+              'images/sameshotlogo.png',
+              height: 20.0,
+              fit: BoxFit.cover,
+            )),
           ),
         ],
       ),
