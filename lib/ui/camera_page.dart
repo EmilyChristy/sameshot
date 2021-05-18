@@ -1,6 +1,6 @@
 import 'dart:io';
 
-//import 'package:camera/camera.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,7 +38,13 @@ class CameraPageState extends State<CameraPage> {
   final double _opacityDefault = 0.5;
   bool isVideo = false;
   PickedFile _imageFile;
+  File _image;
   dynamic _pickImageError;
+  Directory _imagesFolder;
+
+  List<CameraDescription> _cameras;
+  CameraController _controller;
+  int _selected = 0;
 
 //Loading counter value on start
   void _loadPrefs() async {
@@ -52,23 +58,23 @@ class CameraPageState extends State<CameraPage> {
     //print("Got opacity level : $_opacity");
   }
 
-  Future getImage() async {
-    print("Click to get image...");
-    final pickedFile = await _picker.getImage(source: ImageSource.camera);
-    bool kIsWeb = true;
+  // Future getImage() async {
+  //   print("Click to get image...");
+  //   final pickedFile = await _picker.getImage(source: ImageSource.camera);
+  //   bool kIsWeb = true;
 
-    if (kIsWeb) {
-      //for web platform
-      setState(() {
-        _pickedImage = Image.network(pickedFile.path);
-      });
-    } else {
-      //for device platforms
-      setState(() {
-        _pickedImage = Image.file(File(pickedFile.path));
-      });
-    }
-  }
+  //   if (kIsWeb) {
+  //     //for web platform
+  //     setState(() {
+  //       _pickedImage = Image.network(pickedFile.path);
+  //     });
+  //   } else {
+  //     //for device platforms
+  //     setState(() {
+  //       _pickedImage = Image.file(File(pickedFile.path));
+  //     });
+  //   }
+  // }
 
   void _onImageButtonPressed(ImageSource source, {BuildContext context}) async {
     await _displayPickImageDialog(context,
@@ -167,8 +173,8 @@ class CameraPageState extends State<CameraPage> {
             padding: const EdgeInsets.only(top: 16.0),
             child: FloatingActionButton(
               onPressed: () {
-                isVideo = false;
-                _onImageButtonPressed(ImageSource.camera, context: context);
+                // isVideo = false;
+                // _onImageButtonPressed(ImageSource.camera, context: context);
               },
               heroTag: 'image1',
               tooltip: 'Take a Photo',
@@ -265,6 +271,159 @@ class CameraPageState extends State<CameraPage> {
             ],
           );
         });
+  }
+
+  //camera package
+  Future<void> setupCamera() async {
+    await [
+      Permission.camera,
+    ].request();
+    _cameras = await availableCameras();
+
+    //check for available cameras
+    if (_cameras.length > 0) {
+      var controller = await selectCamera();
+      setState(() => _controller = controller);
+
+      // setState(() {
+      //   selectedCameraIdx = 0;
+      // });
+
+      //_initCameraController(cameras[selectedCameraIdx]).then((void v) {});
+    } else {
+      print("No camera available");
+    }
+
+    // var controller = await selectCamera();
+    // setState(() => _controller = controller);
+  }
+
+  //camera package
+  selectCamera() async {
+    var controller =
+        CameraController(_cameras[_selected], ResolutionPreset.low);
+    await controller.initialize();
+    return controller;
+  }
+
+  Future getImage() async {
+    final pickedFile = await _picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        //_image = File(pickedFile.path);
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  /// Display Camera preview.
+  Widget _cameraPreviewWidget() {
+    if (_controller == null || !_controller.value.isInitialized) {
+      return const Text(
+        'Loading',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
+
+    return AspectRatio(
+      aspectRatio: _controller.value.aspectRatio,
+      child: CameraPreview(_controller),
+    );
+  }
+
+  /// Display the control bar with buttons to take pictures
+  Widget _captureControlRowWidget(context) {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FloatingActionButton(
+                child: Icon(_getCameraLensIcon(
+                    CameraLensDirection.front)), //Icon(Icons.camera),
+                backgroundColor: Colors.lightBlue,
+                onPressed: () {
+                  _onCapturePressed(context);
+                })
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _getCameraLensIcon(CameraLensDirection direction) {
+    switch (direction) {
+      case CameraLensDirection.back:
+        return Icons.camera_rear;
+      case CameraLensDirection.front:
+        return Icons.camera_front;
+      case CameraLensDirection.external:
+        return Icons.camera;
+      default:
+        return Icons.device_unknown;
+    }
+  }
+
+  // void _onSwitchCamera() {
+  //   selectedCameraIdx =
+  //       selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+  //   CameraDescription selectedCamera = cameras[selectedCameraIdx];
+  //   _initCameraController(selectedCamera);
+  // }
+
+  void _onCapturePressed(context) async {
+    // Take the Picture in a try / catch block. If anything goes wrong,
+    // catch the error.
+    try {
+      // Attempt to take a picture and log where it's been saved
+      // final path = join(
+      //   // In this example, store the picture in the temp directory. Find
+      //   // the temp directory using the `path_provider` plugin.
+      //   (await getTemporaryDirectory()).path,
+      //   '${DateTime.now()}.png',
+      // );
+
+      final DateFormat formatter = DateFormat('yyyyMMddHHmmss');
+      String fileName = 'image_${formatter.format(DateTime.now())}';
+
+      final Directory directory = await getApplicationDocumentsDirectory();
+      _imagesFolder = Directory(join('${directory.path}', 'gallery'));
+      if (!_imagesFolder.existsSync()) {
+        _imagesFolder.createSync();
+      }
+
+      final String path = '${_imagesFolder.path}/$fileName.png';
+
+      print(path);
+      await _controller.takePicture(path);
+
+      // If the picture was taken, display it on a new screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PreviewImageScreen(imagePath: path),
+        ),
+      );
+    } catch (e) {
+      // If an error occurs, log the error to the console.
+      print(e);
+    }
+  }
+
+  void _showCameraException(CameraException e) {
+    String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
+    print(errorText);
+
+    print('Error: ${e.code}\n${e.description}');
   }
 }
 
