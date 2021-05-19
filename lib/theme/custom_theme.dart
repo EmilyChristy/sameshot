@@ -13,9 +13,9 @@ class CustomTheme with ChangeNotifier {
 
   static ThemeData get lightTheme {
     return ThemeData(
-        primaryColor: Colors.indigo[800],
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Montserrat', //3
+        primaryColor: CustomColors.lightBlue,
+        scaffoldBackgroundColor: CustomColors.lightBackground,
+        fontFamily: 'Hind', //3
         textTheme: TextTheme(
             headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
@@ -23,15 +23,15 @@ class CustomTheme with ChangeNotifier {
         buttonTheme: ButtonThemeData(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)),
-            buttonColor: Colors.orange[700],
+            buttonColor: CustomColors.burntOrange,
             textTheme: ButtonTextTheme.primary));
   }
 
   static ThemeData get darkTheme {
     return ThemeData(
-        primaryColor: CustomColors.darkGrey,
-        scaffoldBackgroundColor: Colors.black,
-        fontFamily: 'Montserrat',
+        primaryColor: Colors.blue,
+        scaffoldBackgroundColor: CustomColors.darkGrey,
+        fontFamily: 'Hind',
         textTheme: TextTheme(
             headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
@@ -40,7 +40,7 @@ class CustomTheme with ChangeNotifier {
         buttonTheme: ButtonThemeData(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)),
-            buttonColor: Colors.orange[700],
+            buttonColor: CustomColors.lightBlue,
             textTheme: ButtonTextTheme.primary));
   }
 }
