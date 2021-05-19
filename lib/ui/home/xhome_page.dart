@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sameshot/theme/config.dart';
 import 'package:sameshot/theme/custom_theme.dart';
-import 'package:sameshot/ui/cameraScreen/camera_screen.dart';
-// import 'package:sameshot/ui/settings_screen.dart';
+import 'package:sameshot/ui/camera_page.dart';
 import 'package:sameshot/ui/custom_app_bar.dart';
 import 'package:sameshot/ui/gallery/gallery.dart';
 import 'package:sameshot/ui/settings_screen.dart';
@@ -53,6 +52,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("OLD HOME page");
+
     return Scaffold(
       // appBar: CustomAppBar(
       //   title: 'Home',
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              return CameraScreen();
+              return CameraPage();
             }),
           )
         },
