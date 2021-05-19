@@ -169,40 +169,47 @@ class CameraPageState extends State with WidgetsBindingObserver {
     //_loadPrefs();
     return Scaffold(
       body: Container(
-        // color: Colors.blue,
-        //child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: _cameraPreviewWidget(),
-            ),
-            SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // _cameraTogglesRowWidget(),
-                _captureControlRowWidget(context),
-                Spacer()
-              ],
-            ),
-            SizedBox(height: 20.0)
-          ],
-        ),
-        //),
-        decoration: BoxDecoration(
-          color: const Color(0xff7c94b6),
-          image: new DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(_opacity), BlendMode.dstATop),
-            repeat: ImageRepeat.repeatY,
-            image: getOverlayImage(),
+          child: Stack(
+        alignment: FractionalOffset.center,
+        children: [
+          Positioned.fill(
+            child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: CameraPreview(_controller)),
           ),
-        ),
-      ),
-      //
+          Positioned.fill(child: Center(child: Text("ON TOP"))),
+        ],
+      )
+          // child: Column(
+          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+          //   children: <Widget>[
+          //     Expanded(
+          //       flex: 1,
+          //       child: _cameraPreviewWidget(),
+          //     ),
+          //     SizedBox(height: 10.0),
+          //     Row(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       children: [
+          //         // _cameraTogglesRowWidget(),
+          //         _captureControlRowWidget(context),
+          //         Spacer()
+          //       ],
+          //     ),
+          //     SizedBox(height: 20.0)
+          //   ],
+          // ),
+          // decoration: BoxDecoration(
+          //   color: const Color(0xff7c94b6),
+          //   image: new DecorationImage(
+          //     fit: BoxFit.cover,
+          //     colorFilter: ColorFilter.mode(
+          //         Colors.black.withOpacity(_opacity), BlendMode.dstATop),
+          //     repeat: ImageRepeat.repeatY,
+          //     image: getOverlayImage(),
+          //   ),
+          // ),
+          ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
