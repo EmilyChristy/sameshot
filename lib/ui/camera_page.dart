@@ -177,7 +177,14 @@ class CameraPageState extends State with WidgetsBindingObserver {
                 aspectRatio: _controller.value.aspectRatio,
                 child: CameraPreview(_controller)),
           ),
-          Positioned.fill(child: Center(child: Text("ON TOP"))),
+          Positioned.fill(
+              child: new Opacity(
+                  opacity: _opacity,
+                  child: Image.asset(
+                    'images/funnydog1.jpg',
+                    height: 20.0,
+                    fit: BoxFit.cover,
+                  ))),
         ],
       )
           // child: Column(
