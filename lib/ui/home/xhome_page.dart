@@ -6,7 +6,7 @@ import 'package:sameshot/theme/custom_theme.dart';
 import 'package:sameshot/ui/camera_page.dart';
 import 'package:sameshot/ui/custom_app_bar.dart';
 import 'package:sameshot/ui/gallery/gallery.dart';
-import 'package:sameshot/ui/settings_screen.dart';
+import 'package:sameshot/ui/xsettings_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);

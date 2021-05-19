@@ -52,15 +52,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    //_controller = new TextEditingController(text: _opacity.toString());
-
     super.initState();
     _loadPrefs();
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     opacityValueHolder.dispose();
     super.dispose();
   }
@@ -74,110 +71,111 @@ class _SettingsPageState extends State<SettingsPage> {
         //     '${widget.title}',
         //   ),
         // ),
-        body: Container(
-            color: CustomColors.lightBackground,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          child: Image.asset(
-                        'images/sameshotlogo.png',
-                        height: 40.0,
-                        fit: BoxFit.cover,
-                      )),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Overlay transparency"),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    controller: opacityValueHolder,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Enter opacity value',
-                        labelText: "Opacity"),
+        body: SafeArea(
+      child: Container(
+          color: CustomColors.lightBackground,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        child: Image.asset(
+                      'images/sameshotlogo.png',
+                      height: 40.0,
+                      fit: BoxFit.cover,
+                    )),
                   ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Overlay transparency"),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: TextFormField(
+                  controller: opacityValueHolder,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter opacity value',
+                      labelText: "Opacity"),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Choose where you want the controls"),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Left handed"),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                      child: Switch(
-                        onChanged: (value) {
-                          setState(() {
-                            isLeftHanded = value;
-                            //currentTheme.toggleTheme();
-                          });
-                        },
-                        value: isLeftHanded,
-                        activeColor: Colors.indigo[900],
-                        activeTrackColor: Colors.lightBlue[100],
-                        inactiveThumbColor: Colors.blueAccent,
-                        inactiveTrackColor: Colors.lightBlue.shade100,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Right handed"),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Which theme"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Switch(
-                    onChanged: (value) {
-                      setState(() {
-                        isSwitched = value;
-                        currentTheme.toggleTheme();
-                      });
-                    },
-                    value: isSwitched,
-                    activeColor: Colors.indigo[900],
-                    activeTrackColor: Colors.lightBlue[100],
-                    inactiveThumbColor: Colors.blueAccent,
-                    inactiveTrackColor: Colors.lightBlue.shade100,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Choose where you want the controls"),
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Left handed"),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(textValue),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 100),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FlatButton(
-                          onPressed: onPressedSavePrefs,
-                          color: Colors.blueAccent,
-                          child: Text("Save")),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: Switch(
+                      onChanged: (value) {
+                        setState(() {
+                          isLeftHanded = value;
+                          //currentTheme.toggleTheme();
+                        });
+                      },
+                      value: isLeftHanded,
+                      activeColor: Colors.indigo[900],
+                      activeTrackColor: Colors.lightBlue[100],
+                      inactiveThumbColor: Colors.blueAccent,
+                      inactiveTrackColor: Colors.lightBlue.shade100,
                     ),
-                  ],
-                )
-              ],
-            )));
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Right handed"),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Which theme"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Switch(
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched = value;
+                      currentTheme.toggleTheme();
+                    });
+                  },
+                  value: isSwitched,
+                  activeColor: Colors.indigo[900],
+                  activeTrackColor: Colors.lightBlue[100],
+                  inactiveThumbColor: Colors.blueAccent,
+                  inactiveTrackColor: Colors.lightBlue.shade100,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(textValue),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 100),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FlatButton(
+                        onPressed: onPressedSavePrefs,
+                        color: Colors.blueAccent,
+                        child: Text("Save")),
+                  ),
+                ],
+              )
+            ],
+          )),
+    ));
   }
 }
